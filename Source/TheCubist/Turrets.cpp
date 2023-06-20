@@ -31,7 +31,7 @@ ATurrets::ATurrets()
 	Beam = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Target3"));
 	Beam->SetupAttachment(Root);
 
-	FollowTarget = CreateDefaultSubobject<USceneComponent>(TEXT("FollowTarget1"));
+	FollowTarget = CreateDefaultSubobject<USceneComponent>(TEXT("FollowTarget"));
 	FollowTarget->SetupAttachment(Root);
 
 }
@@ -54,7 +54,7 @@ void ATurrets::Tick(float DeltaTime)
 	UpdateLookAtTarget(DeltaTime);
 	//TraceBeam();
 }
-void ATurrets::UpdateLookAtTarget(float DeltaTime)
+/*void ATurrets::UpdateLookAtTarget(float DeltaTime)
 {
 	if (LookAtRotation.Equals(TargetRotation, 1.f)) 
 	{
@@ -63,12 +63,12 @@ void ATurrets::UpdateLookAtTarget(float DeltaTime)
 
 	LookAtRotation += RotationDelta * RotationRateMultiplier * DeltaTime;
 
-	if (TurretMesh->GetAnimInstance()->Implements<UTurretAnimInterface>())
+	/*if (TurretMesh->GetAnimInstance()->Implements<UTurretAnimInterface>())
 	{
 		ITurretAnimInterface::Execute_UpdateLookAtRotation(TurretMesh->GetAnimInstance(), LookAtRotation);
 	}
 
-}
+}*/
 void ATurrets::ChangeProjectileTarget()
 {
 	TimerCount++;
@@ -82,14 +82,18 @@ void ATurrets::ChangeProjectileTarget()
 		BeamTarget->SetWorldLocation(Target2->GetComponentLocation());
 	}
 
-	
-		FVector Start = TurretMesh->GetSocketLocation("BeamSocket");
-		FVector End = BeamTarget->GetComponentLocation();
-		TargetRotation = UKismetMathLibrary::FindLookAtRotation(Start, End);
+}
 
-		RotationDelta = TargetRotation - LookAtRotation;
-		RotationDelta.Normalize();
-	
+void ATurrets::UpdateLookAtTarget(float DelaTime)
+{
+	FVector Start = TurretMesh->GetSocketLocation("BeamSocket");
+	FVector End = BeamTarget->GetComponentLocation();
+	TargetRotation = UKismetMathLibrary::FindLookAtRotation(Start, End);
+
+	if (TurretMesh->GetAnimInstance()->Implements<UTurretAnimInterface>()) 
+	{
+		ITurretAnimInterface::Execute_UpdateLookAtRotation(TurretMesh->GetAnimInstance(), LookAtRotation);
+	}
 }
 
 void ATurrets::SetBeamLength(float Length)

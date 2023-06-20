@@ -23,5 +23,5 @@ class THECUBIST_API ITurretAnimInterface
 	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
 public:
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = TurretAnimation)
-		void UpdateLookAtRotation(FRotator Rotation);
+	   	void UpdateLookAtRotation(FRotator Rotation) {}
 };

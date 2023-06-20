@@ -60,7 +60,8 @@ private:
 	UFUNCTION()
 		void ChangeProjectileTarget();
 
-	void UpdateLookAtTarget();
+	//UFUNCTION()
+	  //  void UpdateLookAtTarget(float DeltaTime);
 
 	UFUNCTION(BlueprintCallable)
 		void SetBeamLength(float Length);
