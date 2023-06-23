@@ -74,7 +74,7 @@ void ATheCubistCharacter::SetupPlayerInputComponent(class UInputComponent* Playe
 
 bool ATheCubistCharacter::IsEnemy_Implementation()
 {
-	return true;
+	return (Health>0);
 }
 
 
@@ -112,4 +112,34 @@ void ATheCubistCharacter::SetHasRifle(bool bNewHasRifle)
 bool ATheCubistCharacter::GetHasRifle()
 {
 	return bHasRifle;
+}
+
+float ATheCubistCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
+{
+	if (Health <= 0) 
+	{
+		return 0;
+	}
+
+	float DamageCaused = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
+
+	DamageCaused = FMath::Min(Health, DamageCaused);
+	Health -= DamageCaused;
+
+	/*if (DamageEvent.IsOfType(FPointDamageEvent::ClassID))
+	{
+		FVector HitLocation = ((FPointDamageEvent*)&DamageEvent)->HitInfo.Location;
+		FRotator HitLocation = ((FPointDamageEvent*)&DamageEvent)->HitInfo.Normal.Rotation();
+	}*/
+
+	if (Health <= 0) 
+	{
+		UE_LOG(LogTemp, Warning, TEXT("character died....."));
+		DisableInput(GetWorld()->GetFirstPlayerController());
+		GetMesh()->SetSimulatePhysics(true);
+		GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	}
+
+
+	return DamageCaused;
 }

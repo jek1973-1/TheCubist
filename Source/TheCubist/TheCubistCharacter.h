@@ -41,8 +41,14 @@ class ATheCubistCharacter : public ACharacter, public ICharacterInterface
 	class UInputAction* MoveAction;
 
 	
+
+
+
 public:
 	ATheCubistCharacter();
+	virtual float TakeDamage
+	(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
+
 
 protected:
 	virtual void BeginPlay();
@@ -71,6 +77,9 @@ protected:
 
 	/** Called for looking input */
 	void Look(const FInputActionValue& Value);
+
+	UPROPERTY(EditAnywhere)
+		float Health = 100;
 
 protected:
 	// APawn interface

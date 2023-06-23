@@ -20,7 +20,7 @@ private:
 	UPROPERTY(EditDefaultsOnly)
 		USkeletalMeshComponent* TurretMesh;
 
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(EditAnywhere)
 		UStaticMeshComponent* Beam;
 
 	UPROPERTY(VisibleAnywhere)
@@ -32,6 +32,12 @@ private:
 	UPROPERTY(VisibleAnywhere)
 		USceneComponent* BeamTarget;
 
+	UPROPERTY(EditDefaultsOnly, Category = Shooting)
+		UParticleSystemComponent* P_MuzzleFlash;
+
+	UPROPERTY(EditDefaultsOnly, Category = Shooting)
+		USoundBase* ShootSound;
+
 	UPROPERTY(VisibleAnywhere)
 		USceneComponent* FollowTarget;
 
@@ -40,6 +46,9 @@ private:
 
 	UPROPERTY()
 		FTimerHandle TraceTimerHandle;
+
+	UPROPERTY()
+		FTimerHandle ShootTimerHandle;
 
 	//Rotation related variables
 	int TimerCount = 0;
@@ -54,20 +63,29 @@ private:
 	UPROPERTY(EditAnywhere)
 		float RotationRateMultiplier = 1.0f;
 
+	UPROPERTY()
+		AActor* Enemy = nullptr;
+  
 	UFUNCTION()
 		void UpdateLookAtTarget(float DeltaTime);
 
 	UFUNCTION()
-		void ChangeProjectileTarget();
-
-	//UFUNCTION()
-	  //  void UpdateLookAtTarget(float DeltaTime);
+		void ChangeBeamTarget();
 
 	UFUNCTION(BlueprintCallable)
 		void SetBeamLength(float Length);
 
 	UFUNCTION()
 		void TraceBeam();
+
+	UFUNCTION()
+		void CheckEnemy(AActor* HitActor);
+
+	UFUNCTION()
+		void FollowEnemy(float DeltaTime);
+
+	UFUNCTION()
+		void Shoot();
 
 public:	
 	// Sets default values for this actor's properties
@@ -78,8 +96,8 @@ protected:
 	virtual void BeginPlay() override;
 
 	//--------
-	//Shot length
-	UPROPERTY(EditAnywhere)
+	//Beam length
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 		float BeamLength = 1000.0f;
     //---------
 
